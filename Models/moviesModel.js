@@ -27,12 +27,12 @@ const movieSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Release year is required']
     },
-    realeaseDate: {
+    releaseDate: {
         type: Date
     },
     createdAt: {
         type: Date,
-        default: new Date().now
+        default: Date.now()
     },
     genres: {
         type: [String],
@@ -57,6 +57,6 @@ const movieSchema = new mongoose.Schema({
 
 })
 
-const Movie = mongoose.model('Movie', movieSchema);
+const Movie = mongoose.model('movie', movieSchema);
 
 module.exports = Movie;

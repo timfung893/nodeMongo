@@ -1,0 +1,99 @@
+[{
+  "name": "Die Hard",
+  "description": "Action-packed movie starring Bruce Willis.",
+  "duration": "139",
+  "ratings": 4.5,
+  "totalRatings": 4,
+  "releaseYear": 1990,
+  "genres": [
+    "Action",
+    "Adventure"
+  ],
+  "directors": "Unknown",
+  "coverImage": [
+    "x"
+  ],
+  "actors": [
+    "Bruce Willis"
+  ],
+  "price": 55,
+  "__v": 0
+},
+{
+  "name": "test 1",
+  "description": "test description",
+  "duration": "133",
+  "ratings": 4.5,
+  "releaseYear": 1111,
+  "genres": ["Action", "Comedy"],
+  "directors": "Tim Fung",
+  "coverImage": [],
+  "actors": [],
+  "price": 59,
+  "__v": 0
+},
+{
+  "name": "Test 1",
+  "description": "test description",
+  "duration": "133",
+  "ratings": 4.5,
+  "releaseYear": 1111,
+  "genres": ["Comedy"],
+  "directors": "Tim Fung",
+  "coverImage": [],
+  "actors": [],
+  "price": 19,
+  "__v": 0
+},
+{
+  "name": "Test 3",
+  "description": "test description",
+  "duration": "133",
+  "ratings": 4.5,
+  "releaseYear": 1111,
+  "genres": ["Drama","Romance"],
+  "directors": "Tim Fung",
+  "coverImage": [],
+  "actors": [],
+  "price": 29,
+  "__v": 0
+},
+{
+  "name": "Test 4",
+  "description": "test description",
+  "duration": "133",
+  "ratings": 4.5,
+  "releaseYear": 1111,
+  "genres": ["Drama","Romance"],
+  "directors": "Tim Fung",
+  "coverImage": [],
+  "actors": [],
+  "price": 29,
+  "__v": 0
+},
+{
+  "name": "Test 5",
+  "description": "test description",
+  "duration": "133",
+  "ratings": 4.5,
+  "releaseYear": 1111,
+  "genres": ["Drama","Romance"],
+  "directors": "Tim Fung",
+  "coverImage": [],
+  "actors": [],
+  "price": 29,
+  "__v": 0
+},
+{
+  "name": "Test 6",
+  "description": "test description",
+  "duration": "133",
+  "ratings": 4.5,
+  "releaseYear": 1111,
+  "genres": ["Drama","Romance"],
+  "directors": "Tim Fung",
+  "coverImage": [],
+  "actors": [],
+  "price": 29,
+  "__v": 0
+}]
