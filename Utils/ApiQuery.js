@@ -1,11 +1,12 @@
-const keysToDelete = require('./constants').keysToDelete;
+const constants = require('./constants');
 class ApiQuery {
     constructor(data, queryStr) {
         this.data = data;
         this.queryStr = queryStr;
     }
+    
     filter() {
-        const keysToRemove = ['sort', 'fields', 'page'];
+        const keysToRemove = constants.keysToDelete;
         const copiedQuery = Object.assign({}, this.queryStr)
         keysToRemove.forEach((key) => {
             delete copiedQuery[key];
@@ -27,8 +28,6 @@ class ApiQuery {
         }
         return this;
     }
-
-
 
     limitFields() {
         let fieldStr = this.queryStr.fields;

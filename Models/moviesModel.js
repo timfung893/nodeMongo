@@ -5,7 +5,9 @@ const movieSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Name is required'],
         unique: true,
-        trim: true
+        trim: true,
+        maxLength: 100,
+        minLength: 4
     },
     description: {
         type: String,
@@ -18,7 +20,13 @@ const movieSchema = new mongoose.Schema({
     },
     ratings: {
         type: Number,
-        default: 1.0
+        default: 1.0,
+        validate: {
+            validator: function (value) {
+                return value >= 1 && value <= 10;
+            },
+            message: "Rating {{VALUE}} is invalid. Must be between 1 and 10"    
+        }
     },
     totalRatings: {
         type: Number
