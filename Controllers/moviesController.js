@@ -4,31 +4,13 @@ const ApiQuery = require('./../Utils/ApiQuery')
 
 exports.getAllMovies = async (req, res) => {
     try {
-        let movies = Movie.find();
         const dataQuery = new ApiQuery(Movie.find(), req.query)
-        .filter()
         .sort()
+        .filter()
         .limitFields()
         .paginate();
-        movies = await dataQuery.data;
-        
-        // const queryStr = JSON.stringify(req.query);
-        // const replacedStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-        // const queryObj = JSON.parse(replacedStr);
-        // let query = Movie.find(queryObj);
 
-        // if (req.query.sort) {
-        //     query = query.sort('-price');
-        // }
-    
-        // if (req.query.fields) {
-        //     const fieldStr = req.query.fields.split(',').join(' ');
-        //     query = await query.select(fieldStr);
-        // } else {
-        //     query = await query.select('-__v');
-        // }
-
-        // const movies = await query;
+        let movies = await dataQuery.data;
 
         res.status(200).json({
             status: 'success',

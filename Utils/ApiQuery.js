@@ -1,30 +1,41 @@
+const keysToDelete = require('./constants').keysToDelete;
 class ApiQuery {
     constructor(data, queryStr) {
         this.data = data;
         this.queryStr = queryStr;
     }
-
     filter() {
-        const queryStr = JSON.stringify(this.queryStr);
-        const replacedStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
-        const queryObj = JSON.parse(replacedStr);
+        const keysToRemove = ['sort', 'fields', 'page'];
+        const copiedQuery = Object.assign({}, this.queryStr)
+        keysToRemove.forEach((key) => {
+            delete copiedQuery[key];
+        });
+        let queryStr = JSON.stringify(copiedQuery);
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+        const queryObj = JSON.parse(queryStr);
         this.data = this.data.find(queryObj);
         return this;
+        
     }
-
+    
     sort() {
         if (this.queryStr.sort) {
             const sortStr = this.queryStr.sort.split(',').join(' ');
             this.data = this.data.sort(sortStr);
         } else {
-            this.data = this.data.sort('-__v');
+            this.data = this.data.sort('-createdAt');
         }
         return this;
     }
 
+
+
     limitFields() {
+        let fieldStr = this.queryStr.fields;
         if (this.queryStr.fields) {
-            const fieldStr = this.queryStr.fields.split(',').join(' ');
+            fieldStr = this.queryStr.fields.split(',').join(' ');
+        }
+        if (fieldStr) {
             this.data = this.data.select(fieldStr);
         } else {
             this.data = this.data.select('-__v');
