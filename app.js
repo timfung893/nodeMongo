@@ -2,6 +2,7 @@ const { application } = require('express');
 const express = require('express');
 const morgan = require('morgan');
 const moviesRouter = require('./Routes/movieRoutes')
+const authRouter = require('./Routes/authRoutes')
 const CustomError = require('./Utils/CustomError')
 const globalErrorHandler = require('./Controllers/errorController')
 let app = express();
@@ -15,6 +16,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/v1/movies', moviesRouter);
+app.use('/api/v1/users', authRouter);
 app.all('*', (req, res, next) => {
     // res.json({
     //     status: 'failed',
