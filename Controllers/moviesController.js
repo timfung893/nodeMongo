@@ -55,3 +55,26 @@ exports.getMovie = async (req, res, next) => {
     }
 
 }
+exports.deleteMovie = async (req, res, next) => {
+    try {
+        const id = req.params.id;
+        const movie = await Movie.findById(id);
+
+        if (!movie) {
+            const err = new CustomError('Movie is not found', 404);
+            return next(err);
+        }
+        Movie.deleteOne(id);
+        res.status(200).json({
+            status: 'success',
+            message: 'Movie is deleted successfully'
+
+        });
+    } catch (error) {
+        res.status(400).json({
+            status: 'failed',
+            message: error.message
+        });
+    }
+
+}

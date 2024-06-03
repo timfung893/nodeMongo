@@ -32,6 +32,18 @@ const validationErrorHandler = (error) => {
     }
 }
 
+const tokenExpiredErrorHandler= (error) => {
+    return new CustomError('Token has expired. Please log in again')
+}
+
+const jwtErrorHandler = (error) => {
+    return new CustomError('Invalid token. Please log in again')
+}
+
+const duplicateKeyErrorHandler = (error) => {
+    const name = error.keyValue.name;
+    return new CustomError(`Duplicated value: ${name}. Please change your input`)
+}
 module.exports = (error, req, res, next) => {
     error.statusCode = error.statusCode || 500;
     error.status = error.status || 'error';
@@ -40,6 +52,9 @@ module.exports = (error, req, res, next) => {
         devError(res, error);
     } else if (process.env.NODE_ENV === 'production') {
         if (error.name === constants.validationError) error = validationErrorHandler(error);
+        if (error.name === constants.tokenExpiredError) error = tokenExpiredErrorHandler(error);
+        if (error.name === constants.jwtError) error = jwtErrorHandler(error);
+        if (error.code === constants.duplicateKey) error = duplicateKeyErrorHandler(error);
         prodError(res, error);
     }
 
