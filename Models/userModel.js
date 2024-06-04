@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
             validator: function (val) {
                 return val === this.password;
             },
-            message: 'Password does not match'
+            message: 'Password and confirm password does not match'
         }
     },
     role: {
@@ -40,6 +40,11 @@ const userSchema = new mongoose.Schema({
     passwordChangedDate: Date,
     passwordResetToken: String,
     passwordResetTokenExpiredIn: Date,
+    active: {
+        type: Boolean,
+        select: false,
+        default: true
+    }
 })
 
 userSchema.pre('save', async function(next) {
@@ -49,6 +54,12 @@ userSchema.pre('save', async function(next) {
     this.confirmPassword = undefined;
     next();
 })
+
+// any query starting with 'find' will return active users
+userSchema.pre(/^find/, function(next) {
+    this.find({active: true});
+    next();
+});
 
 userSchema.methods.comparePassword = async function(pwd, pwdDB) {
     return bcrypt.compare(pwd, pwdDB);
@@ -67,6 +78,7 @@ userSchema.methods.createPasswordResetToken = function() {
     this.passwordResetTokenExpiredIn = Date.now() + 10 * 60 * 1000;
     return resetToken;
 }
+
 const User = mongoose.model('User', userSchema); 
 
 module.exports = User;

@@ -7,6 +7,16 @@ const jwt = require('jsonwebtoken');
 const sendEmail = require('./../Utils/email');
 const crypto = require('crypto');
 
+exports.getAllUsers = asyncErrorHandler(async(req, res, next) => {
+    const allUsers = await User.find();
+    res.status(200).json({
+        status: 'success',
+        data: {
+            users: allUsers
+        }
+    })
+})
+
 exports.signToken = id => {
     const token = jwt.sign({id: id}, process.env.SECRET_STR, {
         expiresIn: process.env.EXPIRED_IN
@@ -164,3 +174,60 @@ exports.resetPassword = asyncErrorHandler(async (req, res, next) => {
         }
     }
 });
+
+exports.updatePassword = asyncErrorHandler(async(req, res, next) => {
+    const user = await User.findById(req.user._id).select('+password');
+
+    if (user && user.password) {
+        const isPasswordMatch = await user.comparePassword(req.body.oldPassword, user.password);
+        if (isPasswordMatch) {
+            user.password = req.body.password;
+            user.confirmPassword = req.body.confirmPassword;
+            await user.save();
+            const token = this.signToken(user._id)
+            res.status(200).json({
+                status: 'success',
+                token,
+                message: 'Password changed successfully'
+            })
+        } else {
+            const err = new CustomError('Password does not match');
+            return next(err);
+        }
+    }
+})
+
+const filterReqObj = (obj, ...allowedFields) => {
+    const newObj = {};
+    Object.keys(obj).forEach((key) => {
+        if (allowedFields.includes(key)) {
+            newObj[key] = obj[key];
+        }
+    })
+    return newObj;
+};
+
+exports.updateUserDetail = asyncErrorHandler(async(req, res, next) => {
+    if (req.body.password || req.body.confirmPassword) {
+        const err = new CustomError('You cannot change password with this action');
+        return next(err);
+    }
+
+    const filterObj = filterReqObj(req.body, 'name', 'email');
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, filterObj, {runValidators: true, new: true});
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Updated user information successfully'
+    })
+
+})
+
+exports.deleteUser = asyncErrorHandler(async(req, res, next) => {
+    const deleteUser = await User.findByIdAndUpdate(req.user._id, {active: false});
+
+    res.status(204).json({
+        status: 'success',
+        message: 'Delete account successfullyd'
+    })
+})
