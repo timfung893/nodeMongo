@@ -3,6 +3,12 @@ const Movie = require('./../Models/moviesModel')
 const ApiQuery = require('./../Utils/ApiQuery')
 const asyncErrorHandler = require('../Utils/asyncErrorHandler')
 
+exports.getHighestRatedMovies = asyncErrorHandler(async (req, res, next) => {
+    req.query.limit = 5;
+    req.query.sort = '-ratings'
+    next();
+});
+
 exports.getAllMovies = asyncErrorHandler (async (req, res) => {
     const dataQuery = new ApiQuery(Movie.find(), req.query)
     .sort()
@@ -32,7 +38,7 @@ exports.createMovie = asyncErrorHandler(async (req, res) => {
     
 })
 
-exports.getMovie = async (req, res, next) => {
+exports.getMovie = asyncErrorHandler(async(req, res, next) => {
     try {
         const id = req.params.id;
         const movie = await Movie.findById(id);
@@ -53,9 +59,30 @@ exports.getMovie = async (req, res, next) => {
             message: error.message
         });
     }
+});
 
-}
-exports.deleteMovie = async (req, res, next) => {
+exports.getMovieByGenres = asyncErrorHandler(async(req, res, next) => {
+    const movies = await Movie.aggregate([
+        {$unwind: '$genres'},
+        {$group: {
+            _id: '$genres',
+            movieCount: { $sum: 1 },
+            movies: { $push: '$name' } 
+        }},
+        {$addFields: {genre: '$_id'}},
+        {$project: {_id: 0}},
+        {$sort: {movieCount: -1}}
+    ])
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            movies
+        }
+    })
+});
+
+exports.deleteMovie = asyncErrorHandler(async (req, res, next) => {
     try {
         const id = req.params.id;
         const movie = await Movie.findById(id);
@@ -77,4 +104,4 @@ exports.deleteMovie = async (req, res, next) => {
         });
     }
 
-}
+});

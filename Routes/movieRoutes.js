@@ -8,6 +8,12 @@ router.param('id', (req, res, next, value) => {
     next();
 })
 
+router.route('/highest-rated')
+    .get(moviesController.getHighestRatedMovies, moviesController.getAllMovies)
+
+router.route('/get-by-genres')
+    .get(moviesController.getMovieByGenres, moviesController.getAllMovies)
+
 router.route('/')
     .get(authController.isLoggedIn, moviesController.getAllMovies)
     .post(moviesController.createMovie)
